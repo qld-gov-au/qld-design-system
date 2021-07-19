@@ -426,7 +426,6 @@
 		const state = getState()
 
 		const determineServiceState = (service) => {
-			console.log(isSharing)
 			if(isEmpty(keys[service]) && !isSharing[service]) {
 				$(`#${service}-details`).attr('hidden', true);
 				$(`#${service}-btn-group`).attr('hidden', true);
@@ -443,6 +442,7 @@
 		const determineButtonState = (service) => {
 			let isDirty = false
 
+
 			Object.entries(state).forEach(([key, newValue]) => {
 				if(key.includes(service)) {
 					let isChanged = newValue !== getState()[key]
@@ -456,8 +456,6 @@
 					}
 				} 
 			})
-
-			console.log('isDirty', isDirty)
 	
 			if(isDirty) {
 				$(`#${service}-save-btn`).prop("disabled", false);
@@ -526,12 +524,11 @@
 			});
 
 			$(document).on('click', '#myqld-address-sharing', function (e) {
-				if ($('#myqld-id-sharing').is(":checked") || $('#myqld-email-sharing').is(":checked")) {
-					$('#myqld-address-sharing').trigger('click');
-				} else {
-					$('#myqld-id-sharing').trigger('click');
-					$('#myqld-email-sharing').trigger('click');
-					$('#myqld-address-sharing').prop('checked', false);
+				if($('#myqld-address-sharing').is(":checked")) {
+					$('#myqld-id-sharing').prop('checked', true);
+					$('#myqld-email-sharing').prop('checked', true);
+					state["myqld-id-sharing"] = true
+					state["myqld-email-sharing"] = true
 				}
 
 				determineButtonState('myqld')
@@ -575,7 +572,7 @@
                       original[key] = value
 					}
 				})
-				
+
 				localStorage.setItem('state', JSON.stringify(original))
 
 				$(`#${service}-alert`).attr('hidden', false);
